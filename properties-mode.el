@@ -24,6 +24,14 @@
 
 ;;; Code:
 
+(defgroup properties nil
+  "Major mode to edit Java properties file."
+  :prefix "properties-"
+  :group 'conf)
+
+(defcustom properties-unicode-escape-uppercase nil
+  "Whether to use uppercase characters to escape unicode.")
+
 (defun properties-encode-buffer ()
   "Encode unicode escape characters in the current buffer."
   (interactive)
@@ -35,7 +43,10 @@
         (delete-region (match-beginning 0) (match-end 0))
         (mapc
          (lambda (c)
-           (insert (format "\\u%04x" c)))
+           (insert (format (if properties-unicode-escape-uppercase
+                               "\\u%04X"
+                             "\\u%04x")
+                           c)))
          s)))))
 
 (defun properties-decode-buffer ()
