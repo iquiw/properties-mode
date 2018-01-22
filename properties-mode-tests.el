@@ -32,7 +32,7 @@
 
 (ert-deftest properties-decode-buffer-with-multibytes ()
   (with-temp-buffer
-    (insert "abc=123\ndef=\\uff14\\uff15\\uff16\nghijkl = foobar\n")
+    (insert "abc=123\ndef=\\uff14\\uff15\\uFF16\nghijkl = foobar\n")
     (properties-decode-buffer)
     (should (equal (buffer-substring (point-min) (point-max))
                    "abc=123\ndef=４５６\nghijkl = foobar\n"))))
