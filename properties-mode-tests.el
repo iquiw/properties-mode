@@ -51,7 +51,9 @@
           (find-file file)
           (properties-mode)
           (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
+          (goto-char 8)
           (save-buffer)
+          (should (equal (point) 8))
           (kill-buffer)
           (with-temp-buffer
             (insert-file-contents file)

@@ -71,6 +71,7 @@
          (let ((name (buffer-name))
                (start (point-min))
                (end (point-max))
+               (origin (point))
                modified)
            (with-temp-buffer
              (let ((buf (current-buffer)))
@@ -83,6 +84,7 @@
                (setq modified (buffer-modified-p))
                (delete-region (point-min) (point-max))
                (insert-buffer-substring buf start end)
+               (goto-char origin)
                modified)))
        (message "(No changes need to be saved)")
        nil))
