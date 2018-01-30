@@ -60,7 +60,41 @@
         (delete-region (match-beginning 0) (match-end 0))
         (insert (char-to-string (string-to-number s 16)))))))
 
-(define-derived-mode properties-mode conf-mode "Props")
+(defvar properties--in-save-buffer nil)
+
+(defun properties--save-buffer ()
+  "Save properties mode buffer with encoded."
+  ;; derived from `hexl-save-buffer'.
+  (unless properties--in-save-buffer
+    (restore-buffer-modified-p
+     (if (buffer-modified-p)
+         (let ((name (buffer-name))
+               (start (point-min))
+               (end (point-max))
+               modified)
+           (with-temp-buffer
+             (let ((buf (current-buffer)))
+               (insert-buffer-substring name start end)
+               (set-buffer name)
+               (properties-encode-buffer)
+               ;; Prevent infinite recursion.
+               (let ((properties--in-save-buffer t))
+                 (save-buffer))
+               (setq modified (buffer-modified-p))
+               (delete-region (point-min) (point-max))
+               (insert-buffer-substring buf start end)
+               modified)))
+       (message "(No changes need to be saved)")
+       nil))
+    ;; Return t to indicate we have saved
+    t))
+
+(define-derived-mode properties-mode conf-mode "Props"
+  (when (eq major-mode 'properties-mode)
+    (let ((modified (buffer-modified-p)))
+      (properties-decode-buffer)
+      (restore-buffer-modified-p modified))
+    (add-hook 'write-contents-functions 'properties--save-buffer nil t)))
 
 (provide 'properties-mode)
 ;;; properties-mode.el ends here
