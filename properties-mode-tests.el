@@ -51,6 +51,7 @@
                    "abc=あいう\ndef=いろは\nghi=○△□\n"))))
 
 (ert-deftest properties-mode-save-encoded ()
+  "Check multibyte characters are encoded at save."
   (let ((file (make-temp-file "properties-test-" nil ".properties")))
     (unwind-protect
         (progn

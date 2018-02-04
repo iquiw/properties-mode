@@ -33,7 +33,7 @@
   "Whether to use uppercase characters to escape unicode.")
 
 (defun properties-encode-buffer ()
-  "Encode unicode escape characters in the current buffer."
+  "Encode the current buffer to unicode escape characters."
   (interactive)
   (save-excursion
     (goto-char (point-min))
@@ -60,36 +60,30 @@
         (delete-region (match-beginning 0) (match-end 0))
         (insert (char-to-string (string-to-number s 16)))))))
 
-(defvar properties--in-save-buffer nil)
 
 (defun properties--save-buffer ()
   "Save properties mode buffer with encoded."
-  ;; derived from `hexl-save-buffer'.
-  (unless properties--in-save-buffer
-    (restore-buffer-modified-p
-     (if (buffer-modified-p)
-         (let ((name (buffer-name))
-               (start (point-min))
-               (end (point-max))
-               (origin (point))
-               modified)
-           (with-temp-buffer
-             (let ((buf (current-buffer)))
-               (insert-buffer-substring name start end)
-               (set-buffer name)
-               (properties-encode-buffer)
-               ;; Prevent infinite recursion.
-               (let ((properties--in-save-buffer t))
-                 (save-buffer))
-               (setq modified (buffer-modified-p))
-               (delete-region (point-min) (point-max))
-               (insert-buffer-substring buf start end)
-               (goto-char origin)
-               modified)))
-       (message "(No changes need to be saved)")
-       nil))
-    ;; Return t to indicate we have saved
-    t))
+  (restore-buffer-modified-p
+   (if (buffer-modified-p)
+       (let ((name (buffer-name))
+             (file (buffer-file-name))
+             (start (point-min))
+             (end (point-max))
+             (origin (point))
+             modified
+             modified-time)
+         (with-temp-buffer
+           (let ((buf (current-buffer)))
+             (insert-buffer-substring name start end)
+             (properties-encode-buffer)
+             (set-visited-file-name file t)
+             (save-buffer)
+             (setq modified (buffer-modified-p))
+             (setq modified-time (visited-file-modtime))))
+         (set-visited-file-modtime modified-time)
+         modified)
+     (message "(No changes need to be saved)")
+     nil)))
 
 (define-derived-mode properties-mode conf-mode "Props"
   (when (eq major-mode 'properties-mode)
