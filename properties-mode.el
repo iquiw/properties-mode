@@ -73,23 +73,24 @@
              modified
              modified-time)
          (with-temp-buffer
-           (let ((buf (current-buffer)))
-             (insert-buffer-substring name start end)
-             (properties-encode-buffer)
-             (set-visited-file-name file t)
-             (save-buffer)
-             (setq modified (buffer-modified-p))
-             (setq modified-time (visited-file-modtime))))
+           (insert-buffer-substring name start end)
+           (properties-encode-buffer)
+           (set-visited-file-name file t)
+           (save-buffer)
+           (setq modified (buffer-modified-p))
+           (setq modified-time (visited-file-modtime)))
          (set-visited-file-modtime modified-time)
          modified)
      (message "(No changes need to be saved)")
-     nil)))
+     nil))
+  t)
 
 (define-derived-mode properties-mode conf-mode "Props"
   (when (eq major-mode 'properties-mode)
     (let ((modified (buffer-modified-p)))
       (properties-decode-buffer)
       (restore-buffer-modified-p modified))
+;    (add-hook 'change-major-mode-hook 'properties--maybe-decode-buffer nil t)
     (add-hook 'write-contents-functions 'properties--save-buffer nil t)))
 
 (provide 'properties-mode)
