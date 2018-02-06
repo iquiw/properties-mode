@@ -60,6 +60,13 @@
         (delete-region (match-beginning 0) (match-end 0))
         (insert (char-to-string (string-to-number s 16)))))))
 
+(defun properties--maybe-encode-buffer ()
+  "Encode the current buffer to unicode escape characters according to user's choice."
+  (when (y-or-n-p "Encode the buffer to unicode escape characters? ")
+    (save-excursion
+      (let ((modified (buffer-modified-p)))
+        (properties-encode-buffer)
+        (restore-buffer-modified-p modified)))))
 
 (defun properties--save-buffer ()
   "Save properties mode buffer with encoded."
@@ -90,6 +97,7 @@
     (let ((modified (buffer-modified-p)))
       (properties-decode-buffer)
       (restore-buffer-modified-p modified))
+    (add-hook 'change-major-mode-hook 'properties--maybe-encode-buffer nil t)
     (add-hook 'write-contents-functions 'properties--save-buffer nil t)))
 
 (provide 'properties-mode)

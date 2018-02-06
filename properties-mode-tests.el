@@ -1,3 +1,4 @@
+(require 'cl-lib)
 (require 'ert)
 (require 'properties-mode)
 
@@ -67,3 +68,24 @@
             (should (equal (buffer-substring (point-min) (point-max))
                            "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n"))))
       (delete-file file))))
+
+(ert-deftest properties-mode-change-mode-with-answer-y ()
+  "Check buffer is encoded when changing to other mode if user answers \"y\"."
+  (with-temp-buffer
+    (let ((s "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n"))
+      (insert s)
+      (properties-mode)
+      (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) t)))
+        (conf-mode))
+      (should (equal (buffer-substring (point-min) (point-max)) s)))))
+
+(ert-deftest properties-mode-change-mode-with-answer-n ()
+  "Check buffer is not encoded when changing to other mode if user answers \"n\"."
+  (with-temp-buffer
+    (let ((s "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n"))
+      (insert s)
+      (properties-mode)
+      (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) nil)))
+        (conf-mode))
+      (should (equal (buffer-substring (point-min) (point-max))
+                     "abc=あいう\ndef=いろは\nghi=○△□\n")))))
