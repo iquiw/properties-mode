@@ -75,7 +75,8 @@
          (with-temp-buffer
            (insert-buffer-substring name start end)
            (properties-encode-buffer)
-           (set-visited-file-name file t)
+           (let ((change-major-mode-with-file-name nil))
+             (set-visited-file-name file t))
            (save-buffer)
            (setq modified (buffer-modified-p))
            (setq modified-time (visited-file-modtime)))
