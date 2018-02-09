@@ -2,6 +2,17 @@
 (require 'ert)
 (require 'properties-mode)
 
+(defmacro with-temp-properties-file (&rest body)
+  "Create and open a temporary file and evaluate BODY."
+  (declare (indent 0))
+  `(let ((file (make-temp-file "properties-test-" nil ".properties")))
+     (unwind-protect
+         (progn
+           (find-file file)
+           (properties-mode)
+           ,@body)
+       (delete-file file))))
+
 (ert-deftest properties-encode-buffer-with-ascii-only ()
   "Check ASCII only buffer is unchanged by `properties-encode-buffer'."
   (with-temp-buffer
@@ -53,21 +64,16 @@
 
 (ert-deftest properties-mode-save-encoded ()
   "Check multibyte characters are encoded at save."
-  (let ((file (make-temp-file "properties-test-" nil ".properties")))
-    (unwind-protect
-        (progn
-          (find-file file)
-          (properties-mode)
-          (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
-          (goto-char 8)
-          (save-buffer)
-          (should (equal (point) 8))
-          (kill-buffer)
-          (with-temp-buffer
-            (insert-file-contents file)
-            (should (equal (buffer-substring (point-min) (point-max))
-                           "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n"))))
-      (delete-file file))))
+  (with-temp-properties-file
+    (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
+    (goto-char 8)
+    (save-buffer)
+    (should (equal (point) 8))
+    (kill-buffer)
+    (with-temp-buffer
+      (insert-file-contents file)
+      (should (equal (buffer-substring (point-min) (point-max))
+                     "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n")))))
 
 (ert-deftest properties-mode-change-mode-with-answer-y ()
   "Check buffer is encoded when changing to other mode if user answers \"y\"."
