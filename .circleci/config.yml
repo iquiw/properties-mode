@@ -10,4 +10,4 @@ jobs:
       - checkout
       - run:
           name: test
-          command: emacs -l properties-mode.el -l properties-mode-tests.el --batch -f ert-run-tests-batch-and-exit
+          command: emacs -Q -l properties-mode.el -l properties-mode-tests.el --batch -f ert-run-tests-batch-and-exit
