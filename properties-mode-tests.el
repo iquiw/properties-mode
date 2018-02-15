@@ -95,3 +95,39 @@
         (conf-mode))
       (should (equal (buffer-substring (point-min) (point-max))
                      "abc=あいう\ndef=いろは\nghi=○△□\n")))))
+
+(ert-deftest properties-mode-change-mode-when-ascii-buffer-not-modified-with-answer-y ()
+  "Check buffer is not modified if user answers \"y\" and all characters are ASCII when mode changed."
+  (with-temp-properties-file
+    (insert "abc=123\ndef=456\nghi=789n")
+    (save-buffer)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) t)))
+      (conf-mode))
+    (should (not (buffer-modified-p)))))
+
+(ert-deftest properties-mode-change-mode-when-multibytes-buffer-not-modified-with-answer-y ()
+  "Check buffer is not modified if user answers \"y\" and buffer contains multibyte characters."
+  (with-temp-properties-file
+    (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
+    (save-buffer)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) t)))
+      (conf-mode))
+    (should (not (buffer-modified-p)))))
+
+(ert-deftest properties-mode-change-mode-when-ascii-buffer-not-modified-with-answer-n ()
+  "Check buffer is modified if user answer \"n\" and all characters are ASCII."
+  (with-temp-properties-file
+    (insert "abc=123\ndef=456\nghi=789n")
+    (save-buffer)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) nil)))
+      (conf-mode))
+    (should (not (buffer-modified-p)))))
+
+(ert-deftest properties-mode-change-mode-when-multibytes-buffer-modified-with-answer-n ()
+  "Check buffer is modified if user answers \"n\" and buffer contains multibyte characters."
+  (with-temp-properties-file
+    (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
+    (save-buffer)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) nil)))
+      (conf-mode))
+    (should (buffer-modified-p))))

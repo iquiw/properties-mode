@@ -60,13 +60,24 @@
         (delete-region (match-beginning 0) (match-end 0))
         (insert (char-to-string (string-to-number s 16)))))))
 
+(defun properties--buffer-modified-p ()
+  "Check the current buffer is modified from corresponding file."
+  (let ((file (buffer-file-name)))
+    (or (not file)
+        (not (string-equal (sha1 (current-buffer))
+                           (with-temp-buffer
+                             (insert-file-contents file)
+                             (sha1 (current-buffer))))))))
+
 (defun properties--maybe-encode-buffer ()
   "Encode the current buffer to unicode escape characters according to user's choice."
-  (when (y-or-n-p "Encode the buffer to unicode escape characters? ")
-    (save-excursion
-      (let ((modified (buffer-modified-p)))
-        (properties-encode-buffer)
-        (restore-buffer-modified-p modified)))))
+  (if (y-or-n-p "Encode the buffer to unicode escape characters? ")
+      (save-excursion
+        (let ((modified (buffer-modified-p)))
+          (properties-encode-buffer)
+          (restore-buffer-modified-p (or modified
+                                         (properties--buffer-modified-p)))))
+    (restore-buffer-modified-p (properties--buffer-modified-p))))
 
 (defun properties--save-buffer ()
   "Save properties mode buffer with encoded."
