@@ -3,6 +3,7 @@
 ;; Copyright (C) 2018  Iku Iwasa
 
 ;; Author: Iku Iwasa <iku.iwasa@gmail.com>
+;; Version: 0.1.0
 ;; Keywords: conf java
 
 ;; This program is free software; you can redistribute it and/or modify
