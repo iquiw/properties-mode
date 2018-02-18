@@ -15,3 +15,5 @@ With [use-package](https://github.com/jwiegley/use-package),
 (use-package properties-mode
   :mode "\\.properties\\'")
 ```
+
+To use uppercase characters in unicode escape sequence, set `properties-unicode-escape-uppercase` to `t`.
