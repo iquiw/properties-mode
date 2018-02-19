@@ -1,5 +1,7 @@
 # Properties Mode
 
+[![CircleCI](https://circleci.com/gh/iquiw/properties-mode.svg?style=svg)](https://circleci.com/gh/iquiw/properties-mode)
+
 ## Overview
 
 This is an enhancement of `conf-mode`, focusing on Java language resource files.
