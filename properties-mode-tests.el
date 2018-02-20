@@ -131,3 +131,9 @@
     (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) nil)))
       (conf-mode))
     (should (buffer-modified-p))))
+
+(ert-deftest properties-mode-get-property-value ()
+  (with-temp-buffer
+    (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
+    (should (equal (properties--get-value "def")
+                   "いろは"))))

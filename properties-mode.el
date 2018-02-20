@@ -70,6 +70,16 @@
                              (insert-file-contents file)
                              (sha1 (current-buffer))))))))
 
+(defun properties--get-value (key)
+  "Get property value of KEY in the current buffer.
+Return nil if not found."
+  (save-excursion
+    (goto-char (point-min))
+    (when (re-search-forward (concat "^" (regexp-quote key) "="))
+      (buffer-substring-no-properties
+       (match-end 0)
+       (line-end-position)))))
+
 (defun properties--maybe-encode-buffer ()
   "Encode the current buffer to unicode escape characters according to user's choice."
   (if (y-or-n-p "Encode the buffer to unicode escape characters? ")
