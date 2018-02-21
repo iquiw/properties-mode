@@ -3,7 +3,9 @@
 ;; Copyright (C) 2018  Iku Iwasa
 
 ;; Author: Iku Iwasa <iku.iwasa@gmail.com>
+;; URL: https://github.com/iquiw/properties-mode
 ;; Version: 0.1.0
+;; Package-Requires: ((emacs "24.5"))
 ;; Keywords: conf java
 
 ;; This program is free software; you can redistribute it and/or modify
