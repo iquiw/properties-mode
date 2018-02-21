@@ -132,12 +132,12 @@ Return nil if the current file does not have reference file."
   t)
 
 (define-derived-mode properties-mode conf-mode "Props"
-  (when (eq major-mode 'properties-mode)
-    (let ((modified (buffer-modified-p)))
-      (properties-decode-buffer)
-      (restore-buffer-modified-p modified))
-    (add-hook 'change-major-mode-hook 'properties--maybe-encode-buffer nil t)
-    (add-hook 'write-contents-functions 'properties--save-buffer nil t)))
+  "Major mode to edit Java properties file."
+  (let ((modified (buffer-modified-p)))
+    (properties-decode-buffer)
+    (restore-buffer-modified-p modified))
+  (add-hook 'change-major-mode-hook 'properties--maybe-encode-buffer nil t)
+  (add-hook 'write-contents-functions 'properties--save-buffer nil t))
 
 (provide 'properties-mode)
 ;;; properties-mode.el ends here
