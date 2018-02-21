@@ -30,8 +30,14 @@
   :prefix "properties-"
   :group 'conf)
 
+(defcustom properties-reference-language "en"
+  "Language name to be used as reference for translation.")
+
 (defcustom properties-unicode-escape-uppercase nil
   "Whether to use uppercase characters to escape unicode.")
+
+(defconst properties--langfile-regexp
+  "\\(.+?\\)_\\([a-z]\\{2\\}\\(?:_[a-z]\\{2\\}\\)?\\)\\.\\(.+\\)\\'")
 
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
@@ -79,6 +85,17 @@ Return nil if not found."
       (buffer-substring-no-properties
        (match-end 0)
        (line-end-position)))))
+
+(defun properties--get-reference-file (name)
+  "Find reference properties file for given NAME.
+Return nil if the current file does not have reference file."
+  (when (and name (string-match properties--langfile-regexp name))
+    (let ((ref-file (concat (match-string 1 name)
+                            "_"
+                            properties-reference-language
+                            "."
+                            (match-string 3 name))))
+      ref-file)))
 
 (defun properties--maybe-encode-buffer ()
   "Encode the current buffer to unicode escape characters according to user's choice."

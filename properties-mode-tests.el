@@ -137,3 +137,13 @@
     (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
     (should (equal (properties--get-value "def")
                    "いろは"))))
+
+(ert-deftest properties-mode-get-reference-file-success ()
+  (should (equal (properties--get-reference-file "message_ja.properties") "message_en.properties"))
+  (should (equal (properties--get-reference-file "message_ja_JP.properties") "message_en.properties"))
+  (should (equal (properties--get-reference-file "message_it.props") "message_en.props")))
+
+(ert-deftest properties-mode-get-reference-file-nil ()
+  (should (not (properties--get-reference-file "message.properties")))
+  (should (not (properties--get-reference-file "message_japanese.properties")))
+  (should (not (properties--get-reference-file "message-it.props"))))
