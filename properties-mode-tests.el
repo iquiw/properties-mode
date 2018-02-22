@@ -132,11 +132,11 @@
       (conf-mode))
     (should (buffer-modified-p))))
 
-(ert-deftest properties-mode-get-property-value ()
+(ert-deftest properties-mode-find-property-value ()
   (with-temp-buffer
     (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
-    (should (equal (properties--get-value "def")
-                   "いろは"))))
+    (should (equal (properties--find-value "def") "いろは"))
+    (should (not (properties--find-value "no-such-key")))))
 
 (ert-deftest properties-mode-get-reference-file-success ()
   (should (equal (properties--get-reference-file "message_ja.properties") "message_en.properties"))

@@ -78,12 +78,12 @@
                              (insert-file-contents file)
                              (sha1 (current-buffer))))))))
 
-(defun properties--get-value (key)
-  "Get property value of KEY in the current buffer.
+(defun properties--find-value (key)
+  "Find property value of KEY in the current buffer.
 Return nil if not found."
   (save-excursion
     (goto-char (point-min))
-    (when (re-search-forward (concat "^" (regexp-quote key) "="))
+    (when (re-search-forward (concat "^" (regexp-quote key) "=") nil t)
       (buffer-substring-no-properties
        (match-end 0)
        (line-end-position)))))
