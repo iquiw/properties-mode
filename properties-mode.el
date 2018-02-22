@@ -92,9 +92,9 @@ Return nil if not found."
          (match-end 0)
          (line-end-position))))))
 
-(defun properties--get-reference-file (name)
-  "Find reference properties file for given NAME.
-Return nil if the current file does not have reference file."
+(defun properties--get-reference-name (name)
+  "Return reference properties file name for given NAME.
+Return nil if NAME does not have language part."
   (when (and name (string-match properties--langfile-regexp name))
     (let ((ref-file (concat (match-string 1 name)
                             "_"
