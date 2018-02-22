@@ -133,7 +133,7 @@ Return nil if the current file does not have reference file."
      nil))
   t)
 
-(define-derived-mode properties-mode conf-mode "Props"
+(define-derived-mode properties-mode conf-javaprop-mode "Props"
   "Major mode to edit Java properties file."
   (let ((modified (buffer-modified-p)))
     (properties-decode-buffer)

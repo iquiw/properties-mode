@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is an enhancement of `conf-mode`, focusing on Java language resource files.
+This is an enhancement of `conf-javaprop-mode`, focusing on Java language resource files.
 It automatically decode unicode escape characters at load and encode back at save.
 
 ## Setup
