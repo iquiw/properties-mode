@@ -134,7 +134,8 @@
 
 (ert-deftest properties-mode-find-property-value ()
   (with-temp-buffer
-    (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
+    (insert "abc=あいう\ndef = いろは\nghi = ○△□\n")
+    (should (equal (properties--find-value "abc") "あいう"))
     (should (equal (properties--find-value "def") "いろは"))
     (should (not (properties--find-value "no-such-key")))))
 

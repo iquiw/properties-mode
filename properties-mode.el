@@ -41,6 +41,9 @@
 (defconst properties--langfile-regexp
   "\\(.+?\\)_\\([a-z]\\{2\\}\\(?:_[a-z]\\{2\\}\\)?\\)\\.\\(.+\\)\\'")
 
+(defconst properties--separator-regexp
+  "[[:blank:]]*=[[:blank:]]*")
+
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
   (interactive)
@@ -83,10 +86,11 @@
 Return nil if not found."
   (save-excursion
     (goto-char (point-min))
-    (when (re-search-forward (concat "^" (regexp-quote key) "=") nil t)
-      (buffer-substring-no-properties
-       (match-end 0)
-       (line-end-position)))))
+    (let ((key-regexp (concat "^" (regexp-quote key) properties--separator-regexp)))
+      (when (re-search-forward key-regexp nil t)
+        (buffer-substring-no-properties
+         (match-end 0)
+         (line-end-position))))))
 
 (defun properties--get-reference-file (name)
   "Find reference properties file for given NAME.
