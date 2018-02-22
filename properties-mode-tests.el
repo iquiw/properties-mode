@@ -132,9 +132,16 @@
       (conf-mode))
     (should (buffer-modified-p))))
 
-(ert-deftest properties-mode-find-property-value ()
+(ert-deftest properties-mode-find-property-value-with-equal-separator ()
   (with-temp-buffer
     (insert "abc=あいう\ndef = いろは\nghi = ○△□\n")
+    (should (equal (properties--find-value "abc") "あいう"))
+    (should (equal (properties--find-value "def") "いろは"))
+    (should (not (properties--find-value "no-such-key")))))
+
+(ert-deftest properties-mode-find-property-value-with-colon-separator ()
+  (with-temp-buffer
+    (insert "abc: あいう\ndef: いろは\nghi: ○△□\n")
     (should (equal (properties--find-value "abc") "あいう"))
     (should (equal (properties--find-value "def") "いろは"))
     (should (not (properties--find-value "no-such-key")))))

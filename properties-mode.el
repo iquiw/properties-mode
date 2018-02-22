@@ -42,7 +42,7 @@
   "\\(.+?\\)_\\([a-z]\\{2\\}\\(?:_[a-z]\\{2\\}\\)?\\)\\.\\(.+\\)\\'")
 
 (defconst properties--separator-regexp
-  "[[:blank:]]*=[[:blank:]]*")
+  "[[:blank:]]*[:=][[:blank:]]*")
 
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
