@@ -2,6 +2,9 @@
 (require 'ert)
 (require 'properties-mode)
 
+(when (require 'undercover nil t)
+  (undercover "properties-mode.el"))
+
 (defmacro with-temp-properties-file (&rest body)
   "Create and open a temporary file and evaluate BODY."
   (declare (indent 0))
