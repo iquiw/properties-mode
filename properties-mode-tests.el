@@ -1,5 +1,9 @@
 (require 'cl-lib)
 (require 'ert)
+
+(when (require 'undercover nil t)
+  (undercover "properties-mode.el"))
+
 (require 'properties-mode)
 
 (defmacro with-temp-properties-file (&rest body)
