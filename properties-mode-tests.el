@@ -150,6 +150,27 @@
     (should (equal (properties--find-value "def") "いろは"))
     (should (not (properties--find-value "no-such-key")))))
 
+(ert-deftest properties-test-get-property-key-success ()
+  (with-temp-buffer
+    (insert "abc=123\ndef-ghi: foo\njkl.mno = \n")
+    (goto-char (point-min))
+    (should (equal (properties--get-property-key) "abc"))
+    (forward-line 1)
+    (move-to-column 10)
+    (should (equal (properties--get-property-key) "def-ghi"))
+    (forward-line 1)
+    (should (equal (properties--get-property-key) "jkl.mno"))))
+
+(ert-deftest properties-test-get-property-key-nil ()
+  (with-temp-buffer
+    (insert "abc 123\n\n= foo\n")
+    (goto-char (point-min))
+    (should (not (properties--get-property-key)))
+    (forward-line 1)
+    (should (not (properties--get-property-key)))
+    (forward-line 1)
+    (should (not (properties--get-property-key)))))
+
 (ert-deftest properties-test-get-reference-name-success ()
   (should (equal (properties--get-reference-name "message_ja.properties") "message_en.properties"))
   (should (equal (properties--get-reference-name "message_ja_JP.properties") "message_en.properties"))

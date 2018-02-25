@@ -44,6 +44,9 @@
 (defconst properties--separator-regexp
   "[[:blank:]]*[:=][[:blank:]]*")
 
+(defconst properties--key-regexp
+  (concat "^\\([^:=[:blank:]\n]+\\)" properties--separator-regexp))
+
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
   (interactive)
@@ -91,6 +94,14 @@ Return nil if not found."
         (buffer-substring-no-properties
          (match-end 0)
          (line-end-position))))))
+
+(defun properties--get-property-key ()
+  "Get property key at the current line.
+Return nil if not found."
+  (save-excursion
+    (forward-line 0)
+    (when (looking-at properties--key-regexp)
+      (match-string-no-properties 1))))
 
 (defun properties--get-reference-name (name)
   "Return reference properties file name for given NAME.
