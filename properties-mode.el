@@ -47,6 +47,8 @@
 (defconst properties--key-regexp
   (concat "^\\([^:=[:blank:]\n]+\\)" properties--separator-regexp))
 
+(defvar-local properties--reference-file nil)
+
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
   (interactive)
@@ -83,6 +85,18 @@
                            (with-temp-buffer
                              (insert-file-contents file)
                              (sha1 (current-buffer))))))))
+
+(defun properties--find-reference-value ()
+  "Find property value of same key at the current point in the reference file."
+  (when (and properties--reference-file
+             (not (equal properties--reference-file (buffer-file-name)))
+             (file-regular-p properties--reference-file))
+    (let ((key (properties--get-property-key)))
+      (when key
+        (with-current-buffer (find-file-noselect properties--reference-file)
+          (format "%s: %s"
+                  properties-reference-language
+                  (properties--find-value key)))))))
 
 (defun properties--find-value (key)
   "Find property value of KEY in the current buffer.
@@ -153,6 +167,9 @@ Return nil if NAME does not have language part."
   (let ((modified (buffer-modified-p)))
     (properties-decode-buffer)
     (restore-buffer-modified-p modified))
+  (setq properties--reference-file
+        (properties--get-reference-name (buffer-file-name)))
+  (setq-local eldoc-documentation-function #'properties--find-reference-value)
   (add-hook 'change-major-mode-hook 'properties--maybe-encode-buffer nil t)
   (add-hook 'write-contents-functions 'properties--save-buffer nil t))
 

@@ -180,3 +180,30 @@
   (should (not (properties--get-reference-name "message.properties")))
   (should (not (properties--get-reference-name "message_japanese.properties")))
   (should (not (properties--get-reference-name "message-it.props"))))
+
+(ert-deftest properties-test-find-reference-value-in-ja ()
+  (find-file "test/resources/message_ja.properties")
+  (unwind-protect
+      (progn
+        (properties-mode)
+        (goto-char (point-min))
+        (should (equal (properties--find-reference-value) "en: Hello, world"))
+        (forward-line 1)
+        (should (equal (properties--find-reference-value) "en: Good morning!"))
+        (forward-line 1)
+        (should (equal (properties--find-reference-value) "en: Good evening!")))
+    (kill-buffer)
+    (kill-buffer (get-file-buffer "test/resources/message_en.properties"))))
+
+(ert-deftest properties-test-find-reference-value-in-en ()
+  (find-file "test/resources/message_en.properties")
+  (unwind-protect
+      (progn
+        (properties-mode)
+        (goto-char (point-min))
+        (should (not (properties--find-reference-value)))
+        (forward-line 1)
+        (should (not (properties--find-reference-value)))
+        (forward-line 1)
+        (should (not (properties--find-reference-value))))
+    (kill-buffer)))
