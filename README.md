@@ -7,6 +7,11 @@
 This is an enhancement of `conf-javaprop-mode`, focusing on Java language resource files.
 It automatically decode unicode escape characters at load and encode back at save.
 
+If Eldoc mode is enabled, it displays reference property value in minibuffer,
+which is useful for translation.
+For example, when editing "foo.bar" property on "message_ja.properties" file,
+corresponding value in "message_en.properties" is displayed as Eldoc.
+
 ## Setup
 
 ## Configuration
@@ -18,4 +23,16 @@ With [use-package](https://github.com/jwiegley/use-package),
   :mode "\\.properties\\'")
 ```
 
+### Customization
+
+#### `properties-unicode-escape-uppercase`
+
 To use uppercase characters in unicode escape sequence, set `properties-unicode-escape-uppercase` to `t`.
+Default is `nil`.
+
+#### `properties-reference-language`
+
+Specify language name that is used as reference for translation.
+It is used for language part of name of reference file, `<prefix>_<language>.<suffix>`.
+
+Default is `en`.
