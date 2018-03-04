@@ -33,10 +33,12 @@
   :group 'conf)
 
 (defcustom properties-reference-language "en"
-  "Language name to be used as reference for translation.")
+  "Language name to be used as reference for translation."
+  :type 'string)
 
 (defcustom properties-unicode-escape-uppercase nil
-  "Whether to use uppercase characters to escape unicode.")
+  "Whether to use uppercase characters to escape unicode."
+  :type 'boolean)
 
 (defconst properties--langfile-regexp
   "\\(.+?\\)_\\([a-z]\\{2\\}\\(?:_[a-z]\\{2\\}\\)?\\)\\.\\(.+\\)\\'")
