@@ -51,6 +51,13 @@
 
 (defvar-local properties--reference-file nil)
 
+(defun properties-change-reference-language (language)
+  "Change reference language to LANGUAGE."
+  (interactive "sLanaguage: ")
+  (setq properties-reference-language language)
+  (setq properties--reference-file
+        (properties--get-reference-name (buffer-file-name))))
+
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
   (interactive)

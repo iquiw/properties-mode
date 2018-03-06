@@ -207,3 +207,17 @@
         (forward-line 1)
         (should (not (properties--find-reference-value))))
     (kill-buffer)))
+
+(ert-deftest properties-test-change-reference-language ()
+  (find-file "test/resources/message_ja.properties")
+  (unwind-protect
+      (progn
+        (properties-mode)
+        (goto-char (point-min))
+        (should (equal (properties--find-reference-value) "en: Hello, world"))
+        (properties-change-reference-language "fr")
+        (should (equal (properties--find-reference-value) "fr: Salut, le monde")))
+    (properties-change-reference-language "en")
+    (kill-buffer)
+    (kill-buffer (get-file-buffer "test/resources/message_en.properties"))
+    (kill-buffer (get-file-buffer "test/resources/message_fr.properties"))))
