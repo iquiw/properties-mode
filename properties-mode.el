@@ -55,8 +55,7 @@
   "Change reference language to LANGUAGE."
   (interactive "sLanaguage: ")
   (setq properties-reference-language language)
-  (setq properties--reference-file
-        (properties--get-reference-name (buffer-file-name))))
+  (setq properties--reference-file (properties--get-reference-name)))
 
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
@@ -126,9 +125,12 @@ Return nil if not found."
     (when (looking-at properties--key-regexp)
       (match-string-no-properties 1))))
 
-(defun properties--get-reference-name (name)
+(defun properties--get-reference-name (&optional name)
   "Return reference properties file name for given NAME.
+If NAME is omitted, value of `buffer-file-name' is used.
 Return nil if NAME does not have language part."
+  (unless name
+    (setq name (buffer-file-name)))
   (when (and name (string-match properties--langfile-regexp name))
     (let ((ref-file (concat (match-string 1 name)
                             "_"
@@ -176,8 +178,7 @@ Return nil if NAME does not have language part."
   (let ((modified (buffer-modified-p)))
     (properties-decode-buffer)
     (restore-buffer-modified-p modified))
-  (setq properties--reference-file
-        (properties--get-reference-name (buffer-file-name)))
+  (setq properties--reference-file (properties--get-reference-name))
   (setq-local eldoc-documentation-function #'properties--find-reference-value)
   (add-hook 'change-major-mode-hook 'properties--maybe-encode-buffer nil t)
   (add-hook 'write-contents-functions 'properties--save-buffer nil t))
