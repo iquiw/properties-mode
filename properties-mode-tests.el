@@ -137,6 +137,7 @@
     (should (buffer-modified-p))))
 
 (ert-deftest properties-test-find-property-value-with-equal-separator ()
+  "Check property value is found if separator is \"=\"."
   (with-temp-buffer
     (insert "abc=あいう\ndef = いろは\nghi = ○△□\n")
     (should (equal (properties--find-value "abc") "あいう"))
@@ -144,6 +145,7 @@
     (should (not (properties--find-value "no-such-key")))))
 
 (ert-deftest properties-test-find-property-value-with-colon-separator ()
+  "Check property value is found if separator is \":\"."
   (with-temp-buffer
     (insert "abc: あいう\ndef: いろは\nghi: ○△□\n")
     (should (equal (properties--find-value "abc") "あいう"))
@@ -151,6 +153,7 @@
     (should (not (properties--find-value "no-such-key")))))
 
 (ert-deftest properties-test-get-property-key-success ()
+  "Check property key at the current line is got."
   (with-temp-buffer
     (insert "abc=123\ndef-ghi: foo\njkl.mno = \n")
     (goto-char (point-min))
@@ -162,6 +165,7 @@
     (should (equal (properties--get-property-key) "jkl.mno"))))
 
 (ert-deftest properties-test-get-property-key-nil ()
+  "Check property key at the current line is nil if it is not available."
   (with-temp-buffer
     (insert "abc 123\n\n= foo\n")
     (goto-char (point-min))
@@ -172,16 +176,19 @@
     (should (not (properties--get-property-key)))))
 
 (ert-deftest properties-test-get-reference-name-success ()
+  "Check reference file name is got from the given name."
   (should (equal (properties--get-reference-name "message_ja.properties") "message_en.properties"))
   (should (equal (properties--get-reference-name "message_ja_JP.properties") "message_en.properties"))
   (should (equal (properties--get-reference-name "message_it.props") "message_en.props")))
 
 (ert-deftest properties-test-get-reference-name-nil ()
+  "Check reference file name is nil if the given name is not in proper format."
   (should (not (properties--get-reference-name "message.properties")))
   (should (not (properties--get-reference-name "message_japanese.properties")))
   (should (not (properties--get-reference-name "message-it.props"))))
 
 (ert-deftest properties-test-find-reference-value-in-ja ()
+  "Check reference value is got at the current line if current language is ja."
   (find-file "test/resources/message_ja.properties")
   (unwind-protect
       (progn
@@ -196,6 +203,7 @@
     (kill-buffer (get-file-buffer "test/resources/message_en.properties"))))
 
 (ert-deftest properties-test-find-reference-value-in-en ()
+  "Check reference value is nil if current language is same as reference."
   (find-file "test/resources/message_en.properties")
   (unwind-protect
       (progn
@@ -209,6 +217,7 @@
     (kill-buffer)))
 
 (ert-deftest properties-test-change-reference-language ()
+  "Check reference value is got properly after reference language is changed."
   (find-file "test/resources/message_ja.properties")
   (unwind-protect
       (progn
