@@ -12,9 +12,11 @@
   `(let ((file (make-temp-file "properties-test-" nil ".properties")))
      (unwind-protect
          (progn
-           (find-file file)
+           (let ((auto-mode-alist '()))
+             (find-file file))
            (properties-mode)
            ,@body)
+       (kill-buffer)
        (delete-file file))))
 
 (ert-deftest properties-test-encode-buffer-with-ascii-only ()
