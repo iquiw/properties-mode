@@ -19,6 +19,18 @@
        (kill-buffer)
        (delete-file file))))
 
+(defmacro with-properties-file (file &rest body)
+  "Create and open a properties FILE and evaluate BODY."
+  (declare (indent 1))
+  `(progn
+     (let ((auto-mode-alist '()))
+       (find-file ,file))
+     (unwind-protect
+         (progn
+           (properties-mode)
+           ,@body)
+       (kill-buffer))))
+
 (ert-deftest properties-test-encode-buffer-with-ascii-only ()
   "Check ASCII only buffer is unchanged by `properties-encode-buffer'."
   (with-temp-buffer
@@ -191,44 +203,29 @@
 
 (ert-deftest properties-test-find-reference-value-in-ja ()
   "Check reference value is got at the current line if current language is ja."
-  (find-file "test/resources/message_ja.properties")
-  (unwind-protect
-      (progn
-        (properties-mode)
-        (goto-char (point-min))
-        (should (equal (properties--find-reference-value) "en: Hello, world"))
-        (forward-line 1)
-        (should (equal (properties--find-reference-value) "en: Good morning!"))
-        (forward-line 1)
-        (should (equal (properties--find-reference-value) "en: Good evening!")))
-    (kill-buffer)
-    (kill-buffer (get-file-buffer "test/resources/message_en.properties"))))
+  (with-properties-file "test/resources/message_ja.properties"
+    (goto-char (point-min))
+    (should (equal (properties--find-reference-value) "en: Hello, world"))
+    (forward-line 1)
+    (should (equal (properties--find-reference-value) "en: Good morning!"))
+    (forward-line 1)
+    (should (equal (properties--find-reference-value) "en: Good evening!"))))
 
 (ert-deftest properties-test-find-reference-value-in-en ()
   "Check reference value is nil if current language is same as reference."
-  (find-file "test/resources/message_en.properties")
-  (unwind-protect
-      (progn
-        (properties-mode)
-        (goto-char (point-min))
-        (should (not (properties--find-reference-value)))
-        (forward-line 1)
-        (should (not (properties--find-reference-value)))
-        (forward-line 1)
-        (should (not (properties--find-reference-value))))
-    (kill-buffer)))
+  (with-properties-file "test/resources/message_en.properties"
+    (goto-char (point-min))
+    (should (not (properties--find-reference-value)))
+    (forward-line 1)
+    (should (not (properties--find-reference-value)))
+    (forward-line 1)
+    (should (not (properties--find-reference-value)))))
 
 (ert-deftest properties-test-change-reference-language ()
   "Check reference value is got properly after reference language is changed."
-  (find-file "test/resources/message_ja.properties")
-  (unwind-protect
-      (progn
-        (properties-mode)
-        (goto-char (point-min))
-        (should (equal (properties--find-reference-value) "en: Hello, world"))
-        (properties-change-reference-language "fr")
-        (should (equal (properties--find-reference-value) "fr: Salut, le monde")))
-    (properties-change-reference-language "en")
-    (kill-buffer)
-    (kill-buffer (get-file-buffer "test/resources/message_en.properties"))
-    (kill-buffer (get-file-buffer "test/resources/message_fr.properties"))))
+  (with-properties-file "test/resources/message_ja.properties"
+    (goto-char (point-min))
+    (should (equal (properties--find-reference-value) "en: Hello, world"))
+    (properties-change-reference-language "fr")
+    (should (equal (properties--find-reference-value) "fr: Salut, le monde"))
+    (properties-change-reference-language "en")))
