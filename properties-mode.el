@@ -51,7 +51,10 @@
   "Change reference language to LANGUAGE."
   (interactive "sLanaguage: ")
   (setq properties-reference-language language)
-  (setq properties--reference-file (properties--get-reference-name)))
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (eq major-mode 'properties-mode)
+        (setq properties--reference-file (properties--get-reference-name))))))
 
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
