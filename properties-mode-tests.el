@@ -229,3 +229,13 @@
     (properties-change-reference-language "fr")
     (should (equal (properties--find-reference-value) "fr: Salut, le monde"))
     (properties-change-reference-language "en")))
+
+(ert-deftest properties-test-change-reference-language-via-customize ()
+  "Check reference value is got properly after customizing reference language."
+  (with-properties-file "test/resources/message_ja.properties"
+    (goto-char (point-min))
+    (should (equal (properties--find-reference-value) "en: Hello, world"))
+    (customize-set-variable 'properties-reference-language "fr")
+    (forward-line 1)
+    (should (equal (properties--find-reference-value) "fr: Bonjour!"))
+    (customize-set-variable 'properties-reference-language "en")))
