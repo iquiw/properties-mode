@@ -47,14 +47,23 @@
 
 (defvar-local properties--reference-file nil)
 
-(defun properties-change-reference-language (language)
-  "Change reference language to LANGUAGE."
-  (interactive "sLanaguage: ")
-  (setq properties-reference-language language)
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (eq major-mode 'properties-mode)
-        (setq properties--reference-file (properties--get-reference-name))))))
+(defun properties-change-reference-language (language &optional all)
+  "Change reference language to LANGUAGE.
+If ALL is non-nil or with a prefix argument, change reference language
+in all `properties-mode' buffers."
+  (interactive (list (read-string "Lanaguage: ") current-prefix-arg))
+  (if all
+      (progn
+        (setq-default properties-reference-language language)
+        (dolist (buf (buffer-list))
+          (with-current-buffer buf
+            (when (eq major-mode 'properties-mode)
+              (when (local-variable-p 'properties-reference-language)
+                (kill-local-variable 'properties-reference-language))
+              (setq properties--reference-file (properties--get-reference-name))))))
+    (when (eq major-mode 'properties-mode)
+      (setq-local properties-reference-language language)
+      (setq properties--reference-file (properties--get-reference-name)))))
 
 (defun properties-encode-buffer ()
   "Encode the current buffer to unicode escape characters."
@@ -98,12 +107,11 @@
   (when (and properties--reference-file
              (not (equal properties--reference-file (buffer-file-name)))
              (file-regular-p properties--reference-file))
-    (let ((key (properties--get-property-key)))
+    (let ((key (properties--get-property-key))
+          (lang properties-reference-language))
       (when key
         (with-current-buffer (find-file-noselect properties--reference-file)
-          (format "%s: %s"
-                  properties-reference-language
-                  (properties--find-value key)))))))
+          (format "%s: %s" lang (properties--find-value key)))))))
 
 (defun properties--find-value (key)
   "Find property value of KEY in the current buffer.
@@ -176,7 +184,7 @@ Return nil if NAME does not have language part."
   "Language name to be used as reference for translation."
   :type 'string
   :set (lambda (_variable value)
-         (properties-change-reference-language value)))
+         (properties-change-reference-language value t)))
 
 (define-derived-mode properties-mode conf-javaprop-mode "Props"
   "Major mode to edit Java properties file."
