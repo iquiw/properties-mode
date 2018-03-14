@@ -36,6 +36,13 @@
   "Whether to enable automatic conversion of unicode escape."
   :type 'boolean)
 
+(defcustom properties-reference-language "en"
+  "Language name to be used as reference for translation."
+  :type 'string
+  :initialize #'custom-initialize-default
+  :set (lambda (_variable value)
+         (properties-change-reference-language value t)))
+
 (defcustom properties-unicode-escape-uppercase nil
   "Whether to use uppercase characters to escape unicode."
   :type 'boolean)
@@ -184,12 +191,6 @@ Return nil if NAME does not have language part."
        (message "(No changes need to be saved)")
        nil))
     t))
-
-(defcustom properties-reference-language "en"
-  "Language name to be used as reference for translation."
-  :type 'string
-  :set (lambda (_variable value)
-         (properties-change-reference-language value t)))
 
 (define-derived-mode properties-mode conf-javaprop-mode "Props"
   "Major mode to edit Java properties file."
