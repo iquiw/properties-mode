@@ -145,7 +145,7 @@ Return nil if not found."
 
 (defun properties--get-reference-name (&optional name)
   "Return reference properties file name for given NAME.
-If NAME is omitted, value of `buffer-file-name' is used.
+If NAME is omitted, value of function `buffer-file-name' is used.
 Return nil if NAME does not have language part."
   (unless name
     (setq name (buffer-file-name)))
