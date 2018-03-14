@@ -25,6 +25,11 @@ With [use-package](https://github.com/jwiegley/use-package),
 
 ### Customization
 
+#### `properties-enable-auto-unicode-escape`
+
+To disable automatic unicode escape conversion, set `properties-enable-auto-unicode-escape` to `nil`.
+Default is `t`.
+
 #### `properties-unicode-escape-uppercase`
 
 To use uppercase characters in unicode escape sequence, set `properties-unicode-escape-uppercase` to `t`.
