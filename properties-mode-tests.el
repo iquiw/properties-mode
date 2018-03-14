@@ -80,6 +80,16 @@
     (should (equal (buffer-substring (point-min) (point-max))
                    "abc=あいう\ndef=いろは\nghi=○△□\n"))))
 
+(ert-deftest properties-test-load-encoded-with-auto-escape-disabled ()
+  "Check unicode escaped characters are decoded at load."
+  (with-temp-buffer
+    (insert "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n")
+    (setq properties-enable-auto-unicode-escape nil)
+    (properties-mode)
+    (setq properties-enable-auto-unicode-escape t)
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n"))))
+
 (ert-deftest properties-test-save-encoded ()
   "Check multibyte characters are encoded at save."
   (with-temp-properties-file
@@ -87,11 +97,24 @@
     (goto-char 8)
     (save-buffer)
     (should (equal (point) 8))
-    (kill-buffer)
     (with-temp-buffer
       (insert-file-contents file)
       (should (equal (buffer-substring (point-min) (point-max))
                      "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghi=\\u25cb\\u25b3\\u25a1\n")))))
+
+(ert-deftest properties-test-save-encoded-with-auto-escape-disabled ()
+  "Check multibyte characters are encoded at save."
+  (with-temp-properties-file
+    (insert "abc=あいう\ndef=いろは\nghi=○△□\n")
+    (goto-char 8)
+    (setq properties-enable-auto-unicode-escape nil)
+    (save-buffer)
+    (setq properties-enable-auto-unicode-escape t)
+    (should (equal (point) 8))
+    (with-temp-buffer
+      (insert-file-contents file)
+      (should (equal (buffer-substring (point-min) (point-max))
+                     "abc=あいう\ndef=いろは\nghi=○△□\n")))))
 
 (ert-deftest properties-test-change-mode-with-answer-y ()
   "Check buffer is encoded when changing to other mode if user answers \"y\"."

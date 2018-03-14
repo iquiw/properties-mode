@@ -32,6 +32,10 @@
   :prefix "properties-"
   :group 'conf)
 
+(defcustom properties-enable-auto-unicode-escape t
+  "Whether to enable automatic conversion of unicode escape."
+  :type 'boolean)
+
 (defcustom properties-unicode-escape-uppercase nil
   "Whether to use uppercase characters to escape unicode."
   :type 'boolean)
@@ -158,27 +162,28 @@ Return nil if NAME does not have language part."
 
 (defun properties--save-buffer ()
   "Save properties mode buffer with encoded."
-  (restore-buffer-modified-p
-   (if (buffer-modified-p)
-       (let ((name (buffer-name))
-             (file (buffer-file-name))
-             (start (point-min))
-             (end (point-max))
-             modified
-             modified-time)
-         (with-temp-buffer
-           (insert-buffer-substring name start end)
-           (properties-encode-buffer)
-           (let ((change-major-mode-with-file-name nil))
-             (set-visited-file-name file t))
-           (save-buffer)
-           (setq modified (buffer-modified-p))
-           (setq modified-time (visited-file-modtime)))
-         (set-visited-file-modtime modified-time)
-         modified)
-     (message "(No changes need to be saved)")
-     nil))
-  t)
+  (when properties-enable-auto-unicode-escape
+    (restore-buffer-modified-p
+     (if (buffer-modified-p)
+         (let ((name (buffer-name))
+               (file (buffer-file-name))
+               (start (point-min))
+               (end (point-max))
+               modified
+               modified-time)
+           (with-temp-buffer
+             (insert-buffer-substring name start end)
+             (properties-encode-buffer)
+             (let ((change-major-mode-with-file-name nil))
+               (set-visited-file-name file t))
+             (save-buffer)
+             (setq modified (buffer-modified-p))
+             (setq modified-time (visited-file-modtime)))
+           (set-visited-file-modtime modified-time)
+           modified)
+       (message "(No changes need to be saved)")
+       nil))
+    t))
 
 (defcustom properties-reference-language "en"
   "Language name to be used as reference for translation."
@@ -188,9 +193,10 @@ Return nil if NAME does not have language part."
 
 (define-derived-mode properties-mode conf-javaprop-mode "Props"
   "Major mode to edit Java properties file."
-  (let ((modified (buffer-modified-p)))
-    (properties-decode-buffer)
-    (restore-buffer-modified-p modified))
+  (when properties-enable-auto-unicode-escape
+    (let ((modified (buffer-modified-p)))
+      (properties-decode-buffer)
+      (restore-buffer-modified-p modified)))
   (setq properties--reference-file (properties--get-reference-name))
   (setq-local eldoc-documentation-function #'properties--find-reference-value)
   (add-hook 'change-major-mode-hook 'properties--maybe-encode-buffer nil t)
