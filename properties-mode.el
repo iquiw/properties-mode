@@ -167,6 +167,12 @@ Return nil if NAME does not have language part."
                                          (properties--buffer-modified-p)))))
     (restore-buffer-modified-p (properties--buffer-modified-p))))
 
+(defun properties--revert-buffer (ignore-auto noconfirm)
+  "Revert buffer with mode preserved.
+IGNORE-AUTO and NOCONFIRM are passed to `revert-buffer'."
+  (let (revert-buffer-function)
+    (revert-buffer ignore-auto noconfirm t)))
+
 (defun properties--save-buffer ()
   "Save properties mode buffer with encoded."
   (when properties-enable-auto-unicode-escape
@@ -200,8 +206,9 @@ Return nil if NAME does not have language part."
       (restore-buffer-modified-p modified)))
   (setq properties--reference-file (properties--get-reference-name))
   (setq-local eldoc-documentation-function #'properties--find-reference-value)
-  (add-hook 'change-major-mode-hook 'properties--maybe-encode-buffer nil t)
-  (add-hook 'write-contents-functions 'properties--save-buffer nil t))
+  (setq-local revert-buffer-function #'properties--revert-buffer)
+  (add-hook 'change-major-mode-hook #'properties--maybe-encode-buffer nil t)
+  (add-hook 'write-contents-functions #'properties--save-buffer nil t))
 
 (provide 'properties-mode)
 ;;; properties-mode.el ends here

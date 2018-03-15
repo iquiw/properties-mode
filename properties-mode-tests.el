@@ -273,3 +273,11 @@
     (with-temp-buffer
       (properties-change-reference-language "en" t))
     (should (equal (properties--find-reference-value) "en: Hello, world"))))
+
+(ert-deftest properties-test-revert-buffer-not-asking-encode ()
+  "Check it does not ask encode buffer when revert buffer is performed."
+  (with-properties-file "test/resources/message_ja.properties"
+    (let (called)
+      (cl-letf (((symbol-function 'properties--maybe-encode-buffer) (lambda () (setq called t))))
+        (revert-buffer nil t))
+      (should (not called)))))
