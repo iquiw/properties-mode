@@ -9,7 +9,7 @@
 
 (defmacro with-temp-properties-file (&rest body)
   "Create and open a temporary file and evaluate BODY."
-  (declare (indent 0))
+  (declare (indent 0) (debug (body)))
   `(let ((file (make-temp-file "properties-test-" nil ".properties")))
      (unwind-protect
          (progn
@@ -22,7 +22,7 @@
 
 (defmacro with-properties-file (file &rest body)
   "Create and open a properties FILE and evaluate BODY."
-  (declare (indent 1))
+  (declare (indent 1) (debug (form body)))
   `(progn
      (let ((auto-mode-alist '()))
        (find-file ,file))
