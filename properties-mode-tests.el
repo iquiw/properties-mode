@@ -117,6 +117,15 @@
       (should (equal (buffer-substring (point-min) (point-max))
                      "abc=あいう\ndef=いろは\nghi=○△□\n")))))
 
+(ert-deftest properties-test-save-not-modified-buffer ()
+  "Check save is not processed if buffer is not modified."
+  (with-properties-file "test/resources/message_ja.properties"
+    (let (msg)
+      (cl-letf (((symbol-function 'message) (lambda (&rest args)
+                                              (setq msg (apply #'format args)))))
+        (properties--save-buffer))
+      (should (equal msg "(No changes need to be saved)")))))
+
 (ert-deftest properties-test-change-mode-with-answer-y ()
   "Check buffer is encoded when changing to other mode if user answers \"y\"."
   (with-temp-buffer
