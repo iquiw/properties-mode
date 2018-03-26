@@ -181,7 +181,8 @@
     (save-buffer)
     (cl-letf (((symbol-function 'y-or-n-p) (lambda (_p) nil)))
       (conf-mode))
-    (should (buffer-modified-p))))
+    (should (buffer-modified-p))
+    (restore-buffer-modified-p nil)))
 
 (ert-deftest properties-test-find-property-value-with-equal-separator ()
   "Check property value is found if separator is \"=\"."
