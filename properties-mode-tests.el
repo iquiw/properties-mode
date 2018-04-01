@@ -280,9 +280,9 @@
   (with-properties-file "test/resources/message_ja.properties"
     (goto-char (point-min))
     (should (equal (properties--find-reference-value) "en: Hello, world"))
-    (properties-change-reference-language "fr")
+    (properties-change-reference-language nil "fr")
     (should (equal (properties--find-reference-value) "fr: Salut, le monde"))
-    (properties-change-reference-language "en")))
+    (properties-change-reference-language nil "en")))
 
 (ert-deftest properties-test-change-reference-language-via-customize ()
   "Check reference value is got properly after customizing reference language."
@@ -299,10 +299,10 @@
   (with-properties-file "test/resources/message_ja.properties"
     (goto-char (point-min))
     (should (equal (properties--find-reference-value) "en: Hello, world"))
-    (properties-change-reference-language "fr")
+    (properties-change-reference-language nil "fr")
     (should (equal (properties--find-reference-value) "fr: Salut, le monde"))
     (with-temp-buffer
-      (properties-change-reference-language "en" t))
+      (properties-change-reference-language nil "en" t))
     (should (equal (properties--find-reference-value) "en: Hello, world"))))
 
 (ert-deftest properties-test-revert-buffer-not-asking-encode ()

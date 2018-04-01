@@ -40,8 +40,7 @@
   "Language name to be used as reference for translation."
   :type 'string
   :initialize #'custom-initialize-default
-  :set (lambda (_variable value)
-         (properties-change-reference-language value t)))
+  :set #'properties-change-reference-language)
 
 (defcustom properties-unicode-escape-uppercase nil
   "Whether to use uppercase characters to escape unicode."
@@ -58,11 +57,11 @@
 
 (defvar-local properties--reference-file nil)
 
-(defun properties-change-reference-language (language &optional all)
+(defun properties-change-reference-language (_variable language &optional all)
   "Change reference language to LANGUAGE.
 If ALL is non-nil or with a prefix argument, change reference language
 in all `properties-mode' buffers."
-  (interactive (list (read-string "Lanaguage: ") current-prefix-arg))
+  (interactive (list nil (read-string "Lanaguage: ") current-prefix-arg))
   (if all
       (progn
         (setq-default properties-reference-language language)
