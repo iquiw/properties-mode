@@ -313,5 +313,11 @@
         (revert-buffer nil t))
       (should (not called)))))
 
+(ert-deftest properties-test-view-reference-file ()
+  "Check it shows reference file by `properties-view-reference-file'."
+  (with-properties-file "test/resources/message_ja.properties"
+    (properties-view-reference-file)
+    (should (get-buffer-window (get-file-buffer "test/resources/message_en.properties")))))
+
 (provide 'properties-mode-tests)
 ;;; properties-mode-tests.el ends here

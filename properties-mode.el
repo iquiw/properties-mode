@@ -103,6 +103,12 @@ in all `properties-mode' buffers."
         (delete-region (match-beginning 0) (match-end 0))
         (insert (char-to-string (string-to-number s 16)))))))
 
+(defun properties-view-reference-file ()
+  "Display reference file assosicated with the current buffer."
+  (interactive)
+  (when properties--reference-file
+    (display-buffer (get-file-buffer properties--reference-file))))
+
 (defun properties--buffer-modified-p ()
   "Check the current buffer is modified from corresponding file."
   (let ((file (buffer-file-name)))
