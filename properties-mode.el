@@ -50,6 +50,7 @@
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-c C-d") #'properties-decode-buffer)
     (define-key map (kbd "C-c C-e") #'properties-encode-buffer)
+    (define-key map (kbd "C-c C-l") #'properties-change-reference-language)
     map))
 
 (defconst properties--langfile-regexp

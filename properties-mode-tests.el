@@ -339,5 +339,11 @@
     (should (equal (buffer-substring (point-min) (point-max))
                    "abc=123\ndef=\\uff14\\uff15\\uff16\nghijkl = foobar\n"))))
 
+(ert-deftest properties-test-C-c-C-l-is-bound-to-change-language ()
+  "Check \"C-c C-l\" is bound to `properties-change-reference-language'."
+  (with-properties-file "test/resources/message_ja.properties"
+    (execute-kbd-macro (vconcat (edmacro-parse-keys "C-c C-l") "fr"))
+    (should (equal properties-reference-language "fr"))))
+
 (provide 'properties-mode-tests)
 ;;; properties-mode-tests.el ends here
