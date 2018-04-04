@@ -319,5 +319,25 @@
     (properties-view-reference-file)
     (should (get-buffer-window (get-file-buffer "test/resources/message_en.properties")))))
 
+(ert-deftest properties-test-C-c-C-d-is-bound-to-decode-buffer ()
+  "Check \"C-c C-d\" is bound to `properties-decode-buffer'."
+  (with-temp-buffer
+    (switch-to-buffer (current-buffer))
+    (properties-mode)
+    (insert "abc=123\ndef=\\uff14\\uff15\\uFF16\nghijkl = foobar\n")
+    (execute-kbd-macro (edmacro-parse-keys "C-c C-d"))
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=123\ndef=４５６\nghijkl = foobar\n"))))
+
+(ert-deftest properties-test-C-c-C-e-is-bound-to-encode-buffer ()
+  "Check \"C-c C-e\" is bound to `properties-encode-buffer'."
+  (with-temp-buffer
+    (switch-to-buffer (current-buffer))
+    (properties-mode)
+    (insert "abc=123\ndef=４５６\nghijkl = foobar\n")
+    (execute-kbd-macro (edmacro-parse-keys "C-c C-e"))
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=123\ndef=\\uff14\\uff15\\uff16\nghijkl = foobar\n"))))
+
 (provide 'properties-mode-tests)
 ;;; properties-mode-tests.el ends here

@@ -46,6 +46,12 @@
   "Whether to use uppercase characters to escape unicode."
   :type 'boolean)
 
+(defconst properties-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-d") #'properties-decode-buffer)
+    (define-key map (kbd "C-c C-e") #'properties-encode-buffer)
+    map))
+
 (defconst properties--langfile-regexp
   "\\(.+?\\)_\\([a-z]\\{2\\}\\(?:_[a-z]\\{2\\}\\)?\\)\\.\\(.+\\)\\'")
 
