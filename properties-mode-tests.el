@@ -316,8 +316,11 @@
 (ert-deftest properties-test-view-reference-file ()
   "Check it shows reference file by `properties-view-reference-file'."
   (with-properties-file "test/resources/message_ja.properties"
+    (delete-other-windows)
     (properties-view-reference-file)
-    (should (get-buffer-window (get-file-buffer "test/resources/message_en.properties")))))
+    (let ((ref-buf (get-file-buffer "message_en.properties")))
+      (should ref-buf)
+      (should (get-buffer-window ref-buf)))))
 
 (ert-deftest properties-test-C-c-C-d-is-bound-to-decode-buffer ()
   "Check \"C-c C-d\" is bound to `properties-decode-buffer'."
