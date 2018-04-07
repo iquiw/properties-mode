@@ -51,6 +51,7 @@
     (define-key map (kbd "C-c C-d") #'properties-decode-buffer)
     (define-key map (kbd "C-c C-e") #'properties-encode-buffer)
     (define-key map (kbd "C-c C-l") #'properties-change-reference-language)
+    (define-key map (kbd "C-c C-v") #'properties-view-reference-file)
     map))
 
 (defconst properties--langfile-regexp
@@ -114,7 +115,9 @@ in all `properties-mode' buffers."
   "Display reference file assosicated with the current buffer."
   (interactive)
   (when properties--reference-file
-    (display-buffer (get-file-buffer properties--reference-file))))
+    (let ((buf (or (get-file-buffer properties--reference-file)
+                   (find-file-noselect properties--reference-file))))
+      (display-buffer buf))))
 
 (defun properties--buffer-modified-p ()
   "Check the current buffer is modified from corresponding file."

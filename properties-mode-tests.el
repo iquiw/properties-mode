@@ -348,5 +348,14 @@
     (execute-kbd-macro (vconcat (edmacro-parse-keys "C-c C-l") "fr"))
     (should (equal properties-reference-language "fr"))))
 
+(ert-deftest properties-test-C-c-C-v-is-bound-to-view-reference ()
+  "Check \"C-c C-v\" is bound to `properties-view-reference-file'."
+  (with-properties-file "test/resources/message_ja.properties"
+    (delete-other-windows)
+    (execute-kbd-macro (edmacro-parse-keys "C-c C-v"))
+    (let ((ref-buf (get-file-buffer "message_en.properties")))
+      (should ref-buf)
+      (should (get-buffer-window ref-buf)))))
+
 (provide 'properties-mode-tests)
 ;;; properties-mode-tests.el ends here
