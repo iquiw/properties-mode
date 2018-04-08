@@ -44,3 +44,14 @@ Specify language name that is used as reference for translation.
 It is used for language part of name of reference file, `<prefix>_<language>.<suffix>`.
 
 Default is `en`, which means if one edits `message_ja.properties` then reference file is `message_en.properties`.
+
+## Usage
+
+### Key Bindings
+
+| Key                | Function                               | Description                                                                                                  |
+| ---                | ---                                    | ---                                                                                                          |
+| <kbd>C-c C-d</kbd> | `properties-decode-buffer`             | Decode unicode escape characters in the current buffer.                                                      |
+| <kbd>C-c C-e</kbd> | `properties-encode-buffer`             | Encode non-ASCII characters to unicode escape characters in the current buffer.                              |
+| <kbd>C-c C-l</kbd> | `properties-change-reference-language` | Change reference language of the current buffer. With a prefix argument, change all properties-mode buffers. |
+| <kbd>C-c C-v</kbd> | `properties-view-reference-file`       | View reference file using `display-buffer`.                                                                  |

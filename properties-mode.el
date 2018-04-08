@@ -84,7 +84,7 @@ in all `properties-mode' buffers."
       (setq properties--reference-file (properties--get-reference-name)))))
 
 (defun properties-encode-buffer ()
-  "Encode the current buffer to unicode escape characters."
+  "Encode non-ASCII characters to unicode escape characters in the current buffer ."
   (interactive)
   (save-excursion
     (goto-char (point-min))
