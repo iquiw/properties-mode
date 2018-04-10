@@ -54,4 +54,4 @@ Default is `en`, which means if one edits `message_ja.properties` then reference
 | <kbd>C-c C-d</kbd> | `properties-decode-buffer`             | Decode unicode escape characters in the current buffer.                                                      |
 | <kbd>C-c C-e</kbd> | `properties-encode-buffer`             | Encode non-ASCII characters to unicode escape characters in the current buffer.                              |
 | <kbd>C-c C-l</kbd> | `properties-change-reference-language` | Change reference language of the current buffer. With a prefix argument, change all properties-mode buffers. |
-| <kbd>C-c C-v</kbd> | `properties-view-reference-file`       | View reference file using `display-buffer`.                                                                  |
+| <kbd>C-c C-v</kbd> | `properties-view-reference-file`       | View reference file using in other window.                                                                   |

@@ -318,11 +318,14 @@
   (with-properties-file "test/resources/message_ja.properties"
     (delete-other-windows)
     (let ((this-buf (current-buffer)))
+      (forward-line 1)
       (properties-view-reference-file)
       (let ((ref-buf (get-file-buffer "message_en.properties")))
         (should ref-buf)
         (should (get-buffer-window ref-buf))
-        (should (eq (current-buffer) this-buf))))))
+        (should (eq (current-buffer) this-buf))
+        (with-current-buffer ref-buf
+          (should (= (line-number-at-pos) 2)))))))
 
 (ert-deftest properties-test-C-c-C-d-is-bound-to-decode-buffer ()
   "Check \"C-c C-d\" is bound to `properties-decode-buffer'."

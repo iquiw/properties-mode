@@ -115,9 +115,17 @@ in all `properties-mode' buffers."
   "Display reference file assosicated with the current buffer."
   (interactive)
   (when properties--reference-file
-    (let ((buf (or (get-file-buffer properties--reference-file)
+    (let ((key (properties--get-property-key))
+          (buf (or (get-file-buffer properties--reference-file)
                    (find-file-noselect properties--reference-file))))
-      (display-buffer buf))))
+      (save-selected-window
+        (switch-to-buffer-other-window buf t)
+        (when key
+          (goto-char (point-min))
+          (re-search-forward
+           (concat "^" (regexp-quote key) properties--separator-regexp)
+           nil t)
+          (forward-line 0))))))
 
 (defun properties--buffer-modified-p ()
   "Check the current buffer is modified from corresponding file."
