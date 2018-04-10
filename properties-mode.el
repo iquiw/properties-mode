@@ -173,12 +173,13 @@ Return nil if NAME does not have language part."
   (unless name
     (setq name (buffer-file-name)))
   (when (and name (string-match properties--langfile-regexp name))
-    (let ((ref-file (concat (match-string 1 name)
-                            "_"
-                            properties-reference-language
-                            "."
-                            (match-string 3 name))))
-      ref-file)))
+    (unless (equal (match-string 2 name) properties-reference-language)
+      (let ((ref-file (concat (match-string 1 name)
+                              "_"
+                              properties-reference-language
+                              "."
+                              (match-string 3 name))))
+        ref-file))))
 
 (defun properties--maybe-encode-buffer ()
   "Encode the current buffer to unicode escape characters according to user's choice."

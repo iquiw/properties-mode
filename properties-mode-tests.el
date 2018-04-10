@@ -255,6 +255,10 @@
   (should (not (properties--get-reference-name "message_japanese.properties")))
   (should (not (properties--get-reference-name "message-it.props"))))
 
+(ert-deftest properties-test-get-reference-name-nil-for-reference-language ()
+  "Check reference file name is nil if it is same as reference language"
+  (should (not (properties--get-reference-name "message_en.properties"))))
+
 (ert-deftest properties-test-find-reference-value-in-ja ()
   "Check reference value is got at the current line if current language is ja."
   (with-properties-file "test/resources/message_ja.properties"
