@@ -1,30 +1,33 @@
 version: 2
+
+default: &defaults
+  working_directory: ~/repo
+  steps:
+    - checkout
+    - run: cask
+    - run: cask install
+    - run:
+        name: test
+        command: sh run-tests.sh
+
 jobs:
-  "emacs-25":
-    docker:
-      - image: iquiw/emacs-circleci:latest
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: cask
-      - run: cask install
-      - run:
-          name: test
-          command: sh run-tests.sh
   "emacs-24":
     docker:
-      - image: iquiw/emacs-circleci:24
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: cask
-      - run: cask install
-      - run:
-          name: test
-          command: sh run-tests.sh
+      - image: silex/emacs:24-dev
+    <<: *defaults
+  "emacs-25":
+    docker:
+      - image: silex/emacs:25-dev
+    <<: *defaults
+  "emacs-26":
+    docker:
+      - image: silex/emacs:26-dev
+    <<: *defaults
+
 workflows:
   version: 2
   build:
     jobs:
       - "emacs-24"
       - "emacs-25"
+      - "emacs-26"
