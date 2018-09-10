@@ -49,9 +49,9 @@ Default is `en`, which means if one edits `message_ja.properties` then reference
 
 ### Key Bindings
 
-| Key                | Function                               | Description                                                                                                  |
-| ---                | ---                                    | ---                                                                                                          |
-| <kbd>C-c C-d</kbd> | `properties-decode-buffer`             | Decode unicode escape characters in the current buffer.                                                      |
-| <kbd>C-c C-e</kbd> | `properties-encode-buffer`             | Encode non-ASCII characters to unicode escape characters in the current buffer.                              |
-| <kbd>C-c C-l</kbd> | `properties-change-reference-language` | Change reference language of the current buffer. With a prefix argument, change all properties-mode buffers. |
-| <kbd>C-c C-v</kbd> | `properties-view-reference-file`       | View reference file using in other window.                                                                   |
+| Key                           | Function                               | Description                                                                                                  |
+| ---                           | ---                                    | ---                                                                                                          |
+| <kbd>C-c</kbd> <kbd>C-d</kbd> | `properties-decode-buffer`             | Decode unicode escape characters in the current buffer.                                                      |
+| <kbd>C-c</kbd> <kbd>C-e</kbd> | `properties-encode-buffer`             | Encode non-ASCII characters to unicode escape characters in the current buffer.                              |
+| <kbd>C-c</kbd> <kbd>C-l</kbd> | `properties-change-reference-language` | Change reference language of the current buffer. With a prefix argument, change all properties-mode buffers. |
+| <kbd>C-c</kbd> <kbd>C-v</kbd> | `properties-view-reference-file`       | View reference file using in other window.                                                                   |
