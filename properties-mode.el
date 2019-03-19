@@ -204,11 +204,13 @@ IGNORE-AUTO and NOCONFIRM are passed to `revert-buffer'."
      (if (buffer-modified-p)
          (let ((name (buffer-name))
                (file (buffer-file-name))
+               (coding buffer-file-coding-system)
                (start (point-min))
                (end (point-max))
                modified
                modified-time)
            (with-temp-buffer
+             (set-buffer-file-coding-system coding)
              (insert-buffer-substring name start end)
              (properties-encode-buffer)
              (let ((change-major-mode-with-file-name nil))

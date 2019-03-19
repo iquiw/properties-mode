@@ -137,6 +137,16 @@
       (should (equal (buffer-substring (point-min) (point-max))
                      "abc=あいう\ndef=いろは\nghi=○△□\n")))))
 
+(ert-deftest properties-test-save-preserve-eol-type ()
+  "Check multibyte characters are encoded at save."
+  (with-temp-properties-file
+    (set-buffer-file-coding-system 'utf-8-dos)
+    (insert "abc=123\n")
+    (save-buffer)
+    (with-temp-buffer
+      (insert-file-contents file)
+      (should (equal (coding-system-eol-type buffer-file-coding-system) 1)))))
+
 (ert-deftest properties-test-save-not-modified-buffer ()
   "Check save is not processed if buffer is not modified."
   (with-properties-file "test/resources/message_ja.properties"
