@@ -1,6 +1,6 @@
 ;;; properties-mode.el --- Major mode to edit Java properties file  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018  Iku Iwasa
+;; Copyright (C) 2018-2019  Iku Iwasa
 
 ;; Author: Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL: https://github.com/iquiw/properties-mode
