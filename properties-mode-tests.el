@@ -327,6 +327,13 @@
         (revert-buffer nil t))
       (should (not called)))))
 
+(ert-deftest properties-test-revert-buffer-decode ()
+  "Check it does not ask encode buffer when revert buffer is performed."
+  (with-properties-file "test/resources/message_ja.properties"
+    (revert-buffer nil t)
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "message1=こんにちは世界\nmessage2=おはよう！\nmessage3=こんばんは！\n"))))
+
 (ert-deftest properties-test-view-reference-file ()
   "Check it shows reference file by `properties-view-reference-file'."
   (with-properties-file "test/resources/message_ja.properties"

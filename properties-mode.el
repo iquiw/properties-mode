@@ -195,7 +195,10 @@ Return nil if NAME does not have language part."
   "Revert buffer with mode preserved.
 IGNORE-AUTO and NOCONFIRM are passed to `revert-buffer'."
   (let (revert-buffer-function)
-    (revert-buffer ignore-auto noconfirm t)))
+    (revert-buffer ignore-auto noconfirm t)
+    (remove-hook 'change-major-mode-hook #'properties--maybe-encode-buffer t)
+    (setq major-mode 'fundamental-mode)
+    (properties-mode)))
 
 (defun properties--save-buffer ()
   "Save properties mode buffer with encoded."
