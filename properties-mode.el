@@ -224,6 +224,7 @@ IGNORE-AUTO and NOCONFIRM are passed to `revert-buffer'."
                (setq modified-time (visited-file-modtime))
                (set-visited-file-name nil)))
            (set-visited-file-modtime modified-time)
+           (setq save-buffer-coding-system coding)
            modified)
        (message "(No changes need to be saved)")
        nil))
