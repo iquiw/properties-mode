@@ -23,7 +23,9 @@
 (require 'ert)
 
 (when (require 'undercover nil t)
-  (undercover "properties-mode.el"))
+  (undercover "properties-mode.el"
+              (:report-file "coverage-final.json")
+              (:send-report nil)))
 
 (require 'properties-mode)
 
