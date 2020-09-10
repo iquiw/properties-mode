@@ -1,7 +1,7 @@
 # Properties Mode
 
 [![CircleCI](https://circleci.com/gh/iquiw/properties-mode.svg?style=svg)](https://circleci.com/gh/iquiw/properties-mode)
-[![Coverage Status](https://coveralls.io/repos/github/iquiw/properties-mode/badge.svg?branch=master)](<https://coveralls.io/github/iquiw/properties-mode?branch=master>)
+[![codecov](https://codecov.io/gh/iquiw/properties-mode/branch/master/graph/badge.svg)](https://codecov.io/gh/iquiw/properties-mode)
 
 ## Overview
 
