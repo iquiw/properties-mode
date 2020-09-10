@@ -1,10 +1,10 @@
 ;;; properties-mode.el --- Major mode to edit Java properties file  -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2018-2019  Iku Iwasa
+;; Copyright (C) 2018-2020  Iku Iwasa
 
 ;; Author: Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL: https://github.com/iquiw/properties-mode
-;; Version: 1.0.2
+;; Version: 1.1.0
 ;; Package-Requires: ((emacs "26"))
 ;; Keywords: conf java
 
