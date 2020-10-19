@@ -86,30 +86,56 @@ in all `properties-mode' buffers."
 (defun properties-encode-buffer ()
   "Encode non-ASCII characters to unicode escape characters in the current buffer ."
   (interactive)
+  (properties--encode-range (point-min) (point-max)))
+
+(defun properties-encode-region (beg end)
+  "Encode non-ASCII characters to unicode escape characters in the region between BEG and END."
+  (interactive "r")
+  (when (use-region-p)
+    (properties--encode-range beg end)))
+
+(defun properties--encode-range (beg end)
+  "Encode non-ASCII characters to unicode escape characters between BEG and END."
   (save-excursion
-    (goto-char (point-min))
-    (while (and (not (eobp))
-                (re-search-forward "[^[:ascii:][:cntrl:]]+" nil t))
-      (let ((s (match-string-no-properties 0)))
-        (delete-region (match-beginning 0) (match-end 0))
-        (mapc
-         (lambda (c)
-           (insert (format (if properties-unicode-escape-uppercase
-                               "\\u%04X"
-                             "\\u%04x")
-                           c)))
-         s)))))
+    (let ((end-marker (make-marker)))
+      (set-marker end-marker end)
+      (goto-char beg)
+      (while (and (< (point) end-marker)
+                  (re-search-forward "[^[:ascii:][:cntrl:]]+" end-marker t))
+        (let ((s (match-string-no-properties 0)))
+          (delete-region (match-beginning 0) (match-end 0))
+          (mapc
+           (lambda (c)
+             (insert (format (if properties-unicode-escape-uppercase
+                                 "\\u%04X"
+                               "\\u%04x")
+                             c)))
+           s)))
+      (set-marker end-marker nil))))
 
 (defun properties-decode-buffer ()
   "Decode unicode escape characters in the current buffer."
   (interactive)
+  (properties--decode-range (point-min) (point-max)))
+
+(defun properties-decode-region (beg end)
+  "Decode unicode escape characters in the region between BEG and END."
+  (interactive "r")
+  (when (use-region-p)
+    (properties--decode-range beg end)))
+
+(defun properties--decode-range (beg end)
+  "Decode unicode escape characters between BEG and END."
   (save-excursion
-    (goto-char (point-min))
-    (while (and (not (eobp))
-                (re-search-forward "\\\\u\\([0-9a-f]\\{4\\}\\)" nil t))
-      (let ((s (match-string-no-properties 1)))
-        (delete-region (match-beginning 0) (match-end 0))
-        (insert (char-to-string (string-to-number s 16)))))))
+    (let ((end-marker (make-marker)))
+      (set-marker end-marker end)
+      (goto-char beg)
+      (while (and (< (point) end-marker)
+                  (re-search-forward "\\\\u\\([0-9a-f]\\{4\\}\\)" end-marker t))
+        (let ((s (match-string-no-properties 1)))
+          (delete-region (match-beginning 0) (match-end 0))
+          (insert (char-to-string (string-to-number s 16)))))
+      (set-marker end-marker nil))))
 
 (defun properties-view-reference-file ()
   "Display reference file assosicated with the current buffer."

@@ -29,6 +29,8 @@
 
 (require 'properties-mode)
 
+(transient-mark-mode 1)
+
 (defmacro with-temp-properties-file (&rest body)
   "Create and open a temporary file and evaluate BODY."
   (declare (indent 0) (debug (body)))
@@ -94,6 +96,29 @@
     (properties-decode-buffer)
     (should (equal (buffer-substring (point-min) (point-max))
                    "abc=123\ndef=４５６\nghijkl = foobar\n"))))
+
+(ert-deftest properties-test-encode-region ()
+  "Check multibyte characters in the region are encoded by `properties-encode-region'."
+  (with-temp-buffer
+    (insert "abc=あいう\ndef=いろは\nghijkl=○△□\n")
+    (goto-char (point-min))
+    (set-mark (point))
+    (forward-line 2)
+    (call-interactively #'properties-encode-region)
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghijkl=○△□\n"))))
+
+(ert-deftest properties-test-decode-region ()
+  "Check unicode escaped characters in the region are decoded by `properties-decode-region'."
+  (with-temp-buffer
+    (insert "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghijkl=\\u25cb\\u25b3\\u25a1\n")
+    (goto-char (point-min))
+    (forward-line 1)
+    (set-mark (point))
+    (forward-line 2)
+    (call-interactively #'properties-decode-region)
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=\\u3042\\u3044\\u3046\ndef=いろは\nghijkl=○△□\n"))))
 
 (ert-deftest properties-test-load-encoded ()
   "Check unicode escaped characters are decoded at load."
