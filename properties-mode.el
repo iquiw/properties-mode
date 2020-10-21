@@ -4,7 +4,7 @@
 
 ;; Author: Iku Iwasa <iku.iwasa@gmail.com>
 ;; URL: https://github.com/iquiw/properties-mode
-;; Version: 1.1.0
+;; Version: 2.0.0
 ;; Package-Requires: ((emacs "26"))
 ;; Keywords: conf java
 
