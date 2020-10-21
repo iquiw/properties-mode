@@ -29,6 +29,8 @@
 
 (require 'properties-mode)
 
+(transient-mark-mode 1)
+
 (defmacro with-temp-properties-file (&rest body)
   "Create and open a temporary file and evaluate BODY."
   (declare (indent 0) (debug (body)))
@@ -94,6 +96,29 @@
     (properties-decode-buffer)
     (should (equal (buffer-substring (point-min) (point-max))
                    "abc=123\ndef=４５６\nghijkl = foobar\n"))))
+
+(ert-deftest properties-test-encode-region ()
+  "Check multibyte characters in the region are encoded by `properties-encode-region'."
+  (with-temp-buffer
+    (insert "abc=あいう\ndef=いろは\nghijkl=○△□\n")
+    (goto-char (point-min))
+    (set-mark (point))
+    (forward-line 2)
+    (call-interactively #'properties-encode-region)
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghijkl=○△□\n"))))
+
+(ert-deftest properties-test-decode-region ()
+  "Check unicode escaped characters in the region are decoded by `properties-decode-region'."
+  (with-temp-buffer
+    (insert "abc=\\u3042\\u3044\\u3046\ndef=\\u3044\\u308d\\u306f\nghijkl=\\u25cb\\u25b3\\u25a1\n")
+    (goto-char (point-min))
+    (forward-line 1)
+    (set-mark (point))
+    (forward-line 2)
+    (call-interactively #'properties-decode-region)
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=\\u3042\\u3044\\u3046\ndef=いろは\nghijkl=○△□\n"))))
 
 (ert-deftest properties-test-load-encoded ()
   "Check unicode escaped characters are decoded at load."
@@ -350,25 +375,52 @@
         (with-current-buffer ref-buf
           (should (= (line-number-at-pos) 2)))))))
 
-(ert-deftest properties-test-C-c-C-d-is-bound-to-decode-buffer ()
-  "Check \"C-c C-d\" is bound to `properties-decode-buffer'."
+(ert-deftest properties-test-C-c-C-b-C-d-is-bound-to-decode-buffer ()
+  "Check \"C-c C-b C-d\" is bound to `properties-decode-buffer'."
   (with-temp-buffer
     (switch-to-buffer (current-buffer))
     (properties-mode)
     (insert "abc=123\ndef=\\uff14\\uff15\\uFF16\nghijkl = foobar\n")
-    (execute-kbd-macro (edmacro-parse-keys "C-c C-d"))
+    (execute-kbd-macro (edmacro-parse-keys "C-c C-b C-d"))
     (should (equal (buffer-substring (point-min) (point-max))
                    "abc=123\ndef=４５６\nghijkl = foobar\n"))))
 
-(ert-deftest properties-test-C-c-C-e-is-bound-to-encode-buffer ()
-  "Check \"C-c C-e\" is bound to `properties-encode-buffer'."
+(ert-deftest properties-test-C-c-C-b-C-e-is-bound-to-encode-buffer ()
+  "Check \"C-c C-b C-e\" is bound to `properties-encode-buffer'."
   (with-temp-buffer
     (switch-to-buffer (current-buffer))
     (properties-mode)
     (insert "abc=123\ndef=４５６\nghijkl = foobar\n")
-    (execute-kbd-macro (edmacro-parse-keys "C-c C-e"))
+    (execute-kbd-macro (edmacro-parse-keys "C-c C-b C-e"))
     (should (equal (buffer-substring (point-min) (point-max))
                    "abc=123\ndef=\\uff14\\uff15\\uff16\nghijkl = foobar\n"))))
+
+(ert-deftest properties-test-C-c-C-d-is-bound-to-decode-region ()
+  "Check \"C-c C-d\" is bound to `properties-decode-region'."
+  (with-temp-buffer
+    (switch-to-buffer (current-buffer))
+    (properties-mode)
+    (insert "abc=\\uff11\\uff12\\uff13\ndef=\\uff14\\uff15\\uFF16\nghijkl = foobar\n")
+    (goto-char (point-min))
+    (set-mark (point))
+    (forward-line 1)
+    (execute-kbd-macro (edmacro-parse-keys "C-c C-d"))
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=１２３\ndef=\\uff14\\uff15\\uFF16\nghijkl = foobar\n"))))
+
+(ert-deftest properties-test-C-c-C-e-is-bound-to-encode-region ()
+  "Check \"C-c C-e\" is bound to `properties-encode-region'."
+  (with-temp-buffer
+    (switch-to-buffer (current-buffer))
+    (properties-mode)
+    (insert "abc=１２３\ndef=４５６\nghijkl = foobar\n")
+    (goto-char (point-min))
+    (set-mark (point))
+    (forward-line 1)
+    (execute-kbd-macro (edmacro-parse-keys "C-c C-e"))
+    (should (equal (buffer-substring (point-min) (point-max))
+                   "abc=\\uff11\\uff12\\uff13\ndef=４５６\nghijkl = foobar\n"))))
+
 
 (ert-deftest properties-test-C-c-C-l-is-bound-to-change-language ()
   "Check \"C-c C-l\" is bound to `properties-change-reference-language'."
