@@ -48,8 +48,10 @@
 
 (defconst properties-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "C-c C-d") #'properties-decode-buffer)
-    (define-key map (kbd "C-c C-e") #'properties-encode-buffer)
+    (define-key map (kbd "C-c C-b C-d") #'properties-decode-buffer)
+    (define-key map (kbd "C-c C-b C-e") #'properties-encode-buffer)
+    (define-key map (kbd "C-c C-d") #'properties-decode-region)
+    (define-key map (kbd "C-c C-e") #'properties-encode-region)
     (define-key map (kbd "C-c C-l") #'properties-change-reference-language)
     (define-key map (kbd "C-c C-v") #'properties-view-reference-file)
     map))

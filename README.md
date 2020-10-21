@@ -49,9 +49,11 @@ Default is `en`, which means if one edits `message_ja.properties` then reference
 
 ### Key Bindings
 
-| Key                           | Function                               | Description                                                                                                  |
-| ---                           | ---                                    | ---                                                                                                          |
-| <kbd>C-c</kbd> <kbd>C-d</kbd> | `properties-decode-buffer`             | Decode unicode escape characters in the current buffer.                                                      |
-| <kbd>C-c</kbd> <kbd>C-e</kbd> | `properties-encode-buffer`             | Encode non-ASCII characters to unicode escape characters in the current buffer.                              |
-| <kbd>C-c</kbd> <kbd>C-l</kbd> | `properties-change-reference-language` | Change reference language of the current buffer. With a prefix argument, change all properties-mode buffers. |
-| <kbd>C-c</kbd> <kbd>C-v</kbd> | `properties-view-reference-file`       | View reference file using in other window.                                                                   |
+| Key                                          | Function                               | Description                                                                                                  |
+| ---                                          | ---                                    | ---                                                                                                          |
+| <kbd>C-c</kbd> <kbd>C-b</kbd> <kbd>C-d</kbd> | `properties-decode-buffer`             | Decode unicode escape characters in the current buffer.                                                      |
+| <kbd>C-c</kbd> <kbd>C-b</kbd> <kbd>C-e</kbd> | `properties-encode-buffer`             | Encode non-ASCII characters to unicode escape characters in the current buffer.                              |
+| <kbd>C-c</kbd> <kbd>C-d</kbd>                | `properties-decode-region`             | Decode unicode escape characters in the active region.                                                       |
+| <kbd>C-c</kbd> <kbd>C-e</kbd>                | `properties-encode-region`             | Encode non-ASCII characters to unicode escape characters in the active region.                               |
+| <kbd>C-c</kbd> <kbd>C-l</kbd>                | `properties-change-reference-language` | Change reference language of the current buffer. With a prefix argument, change all properties-mode buffers. |
+| <kbd>C-c</kbd> <kbd>C-v</kbd>                | `properties-view-reference-file`       | View reference file using in other window.                                                                   |
