@@ -25,6 +25,7 @@
 (when (require 'undercover nil t)
   (undercover "properties-mode.el"
               (:report-file "coverage-final.json")
+              (:report-format 'codecov)
               (:send-report nil)))
 
 (require 'properties-mode)
